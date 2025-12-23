@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" 
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  
+  <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+
+  <xsl:template match="/">
+    <items>
+      <xsl:apply-templates select="//li[@data-id]" mode="item"/>
+    </items>
+  </xsl:template>
+  
+  <xsl:template match="li[@data-id]" mode="item">
+    <xsl:variable name="id" select="@data-id"/>
+    <xsl:variable name="parentid">
+      <xsl:choose>
+        <xsl:when test="ancestor::li[@data-id][1]/@data-id">
+          <xsl:value-of select="ancestor::li[@data-id][1]/@data-id"/>
+        </xsl:when>
+        <xsl:otherwise>0</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    
+    <item id="{$id}" parentid="{$parentid}" author="{normalize-space(b/span)}">
+      <xsl:value-of select="normalize-space(span[not(parent::b)])"/>
+    </item>
+  </xsl:template>
+
+</xsl:stylesheet> 
